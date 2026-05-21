@@ -1,5 +1,7 @@
 # vs-dte-cli
 
+English | [简体中文](README.zh-CN.md)
+
 `vs-dte-cli` is a small Windows command-line tool for controlling Visual Studio
 through DTE while debugging .NET Framework MSTest runs.
 
