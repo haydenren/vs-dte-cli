@@ -14,19 +14,7 @@ namespace VsDteCli
                 return Path.GetFullPath(configured);
             }
 
-            string current = Directory.GetCurrentDirectory();
-            if (File.Exists(Path.Combine(current, DefaultSolution)))
-            {
-                return current;
-            }
-
-            string nested = Path.Combine(current, "autotest.leyserplus");
-            if (File.Exists(Path.Combine(nested, DefaultSolution)))
-            {
-                return nested;
-            }
-
-            return current;
+            return Directory.GetCurrentDirectory();
         }
 
         private static string ResolvePath(string root, string path)
@@ -43,6 +31,69 @@ namespace VsDteCli
             }
 
             return value;
+        }
+
+        private static string ResolveSolutionPath(string root, CommandOptions options, bool required)
+        {
+            string configured = options.Get("solution");
+            if (!string.IsNullOrWhiteSpace(configured))
+            {
+                return ResolvePath(root, configured);
+            }
+
+            string[] candidates = Directory.Exists(root)
+                ? Directory.GetFiles(root, "*.sln", SearchOption.TopDirectoryOnly)
+                : new string[0];
+
+            if (candidates.Length == 1)
+            {
+                return Path.GetFullPath(candidates[0]);
+            }
+
+            if (candidates.Length > 1)
+            {
+                if (required)
+                {
+                    throw new InvalidOperationException("Multiple solution files found under root. Provide --solution.");
+                }
+
+                return null;
+            }
+
+            if (required)
+            {
+                throw new InvalidOperationException("Missing --solution and no .sln file was found under root.");
+            }
+
+            return null;
+        }
+
+        private static string ResolveOptionalPath(string root, string path)
+        {
+            return string.IsNullOrWhiteSpace(path) ? null : ResolvePath(root, path);
+        }
+
+        private static string GetTargetMarker(CommandOptions options)
+        {
+            string marker = options.Get("target-marker");
+            if (!string.IsNullOrWhiteSpace(marker))
+            {
+                return marker;
+            }
+
+            string testDll = options.Get("test-dll");
+            return string.IsNullOrWhiteSpace(testDll) ? null : Path.GetFileName(testDll);
+        }
+
+        private static string RequireTargetMarker(CommandOptions options)
+        {
+            string marker = GetTargetMarker(options);
+            if (string.IsNullOrWhiteSpace(marker))
+            {
+                throw new InvalidOperationException("Missing --target-marker or --test-dll. Refusing to clean all test processes without a marker.");
+            }
+
+            return marker;
         }
 
         private static string ModeName(int mode)

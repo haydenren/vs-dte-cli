@@ -9,8 +9,10 @@ namespace VsDteCli
         private const string DefaultDteProgId = "VisualStudio.DTE.18.0";
         private const string DefaultDevenvPath = @"C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\devenv.exe";
         private const string DefaultVstestPath = @"C:\Program Files\Microsoft Visual Studio\18\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe";
-        private const string DefaultSolution = "SchoolSiteTest.sln";
-        private const string DefaultTestDll = @"SchoolSiteScript\bin\Debug\SchoolSiteScript.dll";
-        private const string DefaultTargetMarker = "SchoolSiteScript.dll";
+        private const string LiveDebugMarkerVariable = "VSDTECLI_LIVE_DEBUG";
+        private const string LiveDebugFirstBreakVariable = "VSDTECLI_FIRST_BREAK";
+        private const string LiveDebugFirstBreakScopeVariable = "VSDTECLI_FIRST_BREAK_SCOPE";
+        private const string LiveDebugAttachWaitVariable = "VSDTECLI_ATTACH_WAIT_MS";
+        private const string LiveDebugFirstBreakModeVariable = "VSDTECLI_FIRST_BREAK_MODE";
     }
 }

@@ -14,9 +14,9 @@ namespace VsDteCli
         {
             string root = ResolveRoot(options);
             string dteProgId = options.Get("dte-prog-id") ?? DefaultDteProgId;
-            string solutionPath = ResolvePath(root, options.Get("solution") ?? DefaultSolution);
+            string solutionPath = ResolveSolutionPath(root, options, true);
             string vstestPath = options.Get("vstest") ?? DefaultVstestPath;
-            string testDll = options.Get("test-dll") ?? DefaultTestDll;
+            string testDll = Require(options, "test-dll");
             string testDllFullPath = ResolvePath(root, testDll);
             string testName = Require(options, "test");
             string breakFile = ResolvePath(root, Require(options, "break-file"));
@@ -212,11 +212,11 @@ namespace VsDteCli
                 CreateNoWindow = true
             };
 
-            startInfo.EnvironmentVariables["AUTOTEST_DEBUGMCP_LIVE_DEBUG"] = "1";
-            startInfo.EnvironmentVariables["AUTOTEST_LIVE_DEBUG_FIRST_BREAK"] = "1";
-            startInfo.EnvironmentVariables["AUTOTEST_LIVE_DEBUG_FIRST_BREAK_SCOPE"] = breakScope;
-            startInfo.EnvironmentVariables["AUTOTEST_LIVE_DEBUG_ATTACH_WAIT_MS"] = attachWaitMs.ToString(CultureInfo.InvariantCulture);
-            startInfo.EnvironmentVariables["AUTOTEST_LIVE_DEBUG_FIRST_BREAK_MODE"] =
+            startInfo.EnvironmentVariables[LiveDebugMarkerVariable] = "1";
+            startInfo.EnvironmentVariables[LiveDebugFirstBreakVariable] = "1";
+            startInfo.EnvironmentVariables[LiveDebugFirstBreakScopeVariable] = breakScope;
+            startInfo.EnvironmentVariables[LiveDebugAttachWaitVariable] = attachWaitMs.ToString(CultureInfo.InvariantCulture);
+            startInfo.EnvironmentVariables[LiveDebugFirstBreakModeVariable] =
                 options.Get("first-break-mode") ?? "Break";
 
             Process process = Process.Start(startInfo);

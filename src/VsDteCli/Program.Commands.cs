@@ -16,9 +16,8 @@ namespace VsDteCli
             string dteProgId = options.Get("dte-prog-id") ?? DefaultDteProgId;
             string devenvPath = options.Get("devenv") ?? DefaultDevenvPath;
             string vstestPath = options.Get("vstest") ?? DefaultVstestPath;
-            string solutionPath = ResolvePath(root, options.Get("solution") ?? DefaultSolution);
-            string testDllPath = ResolvePath(root, options.Get("test-dll") ?? DefaultTestDll);
-            string startScriptPath = ResolvePath(root, @"tools\vs-dte\Invoke-MstestVsDte.ps1");
+            string solutionPath = ResolveSolutionPath(root, options, false);
+            string testDllPath = ResolveOptionalPath(root, options.Get("test-dll"));
             string cliPath = typeof(Program).Assembly.Location;
 
             PreflightInfo info = new PreflightInfo
@@ -30,14 +29,12 @@ namespace VsDteCli
                 VstestPath = vstestPath,
                 SolutionPath = solutionPath,
                 TestDllPath = testDllPath,
-                StartScriptPath = startScriptPath,
                 CliPath = cliPath,
                 DteProgIdAvailable = Type.GetTypeFromProgID(dteProgId, false) != null,
                 DevenvExists = File.Exists(devenvPath),
                 VstestExists = File.Exists(vstestPath),
-                SolutionExists = File.Exists(solutionPath),
-                TestDllExists = File.Exists(testDllPath),
-                StartScriptExists = File.Exists(startScriptPath)
+                SolutionExists = !string.IsNullOrWhiteSpace(solutionPath) && File.Exists(solutionPath),
+                TestDllExists = !string.IsNullOrWhiteSpace(testDllPath) && File.Exists(testDllPath)
             };
 
             if (!Directory.Exists(root))
@@ -297,7 +294,12 @@ namespace VsDteCli
 
         private static bool HasTargetTestProcess(CommandOptions options)
         {
-            string marker = options.Get("target-marker") ?? DefaultTargetMarker;
+            string marker = GetTargetMarker(options);
+            if (string.IsNullOrWhiteSpace(marker))
+            {
+                return GetTargetTestProcesses(null).Any();
+            }
+
             return GetTargetTestProcesses(marker).Any();
         }
 
@@ -324,7 +326,7 @@ namespace VsDteCli
 
         private static int RunCleanup(CommandOptions options)
         {
-            string marker = options.Get("target-marker") ?? DefaultTargetMarker;
+            string marker = RequireTargetMarker(options);
             bool includeDevenv = options.GetBoolOrDefault("devenv", false);
             CleanupInfo info = new CleanupInfo
             {

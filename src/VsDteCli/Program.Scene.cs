@@ -25,7 +25,7 @@ namespace VsDteCli
                 Locals = new List<VariableInfo>(),
                 Watches = new List<WatchInfo>(),
                 SourceContext = new List<SourceLineInfo>(),
-                TargetProcesses = GetTargetTestProcesses(options.Get("target-marker") ?? DefaultTargetMarker).Select(ToProcessInfo).ToList(),
+                TargetProcesses = GetTargetTestProcesses(GetTargetMarker(options)).Select(ToProcessInfo).ToList(),
                 Errors = new List<string>()
             };
             scene.ModeName = ModeName(scene.Mode);

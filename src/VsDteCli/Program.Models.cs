@@ -37,14 +37,12 @@ namespace VsDteCli
             public string VstestPath { get; set; }
             public string SolutionPath { get; set; }
             public string TestDllPath { get; set; }
-            public string StartScriptPath { get; set; }
             public string CliPath { get; set; }
             public bool DteProgIdAvailable { get; set; }
             public bool DevenvExists { get; set; }
             public bool VstestExists { get; set; }
             public bool SolutionExists { get; set; }
             public bool TestDllExists { get; set; }
-            public bool StartScriptExists { get; set; }
         }
 
         private sealed class SceneInfo

@@ -10,6 +10,7 @@ namespace VsDteCli
     {
         private static IEnumerable<Process> GetTargetTestProcesses(string marker)
         {
+            bool filterByMarker = !string.IsNullOrWhiteSpace(marker);
             foreach (Process process in Process.GetProcesses())
             {
                 string name;
@@ -29,7 +30,8 @@ namespace VsDteCli
                 }
 
                 string commandLine = GetCommandLine(process.Id);
-                if (!string.IsNullOrWhiteSpace(commandLine) && commandLine.IndexOf(marker, StringComparison.OrdinalIgnoreCase) >= 0)
+                if (!filterByMarker ||
+                    (!string.IsNullOrWhiteSpace(commandLine) && commandLine.IndexOf(marker, StringComparison.OrdinalIgnoreCase) >= 0))
                 {
                     yield return process;
                 }

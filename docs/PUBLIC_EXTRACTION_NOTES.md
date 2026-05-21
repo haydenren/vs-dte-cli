@@ -8,9 +8,14 @@ Initial scope:
 
 Before publishing:
 
-- Make `--solution`, `--test-dll`, and `--test` explicit or safely discovered.
-- Replace internal defaults such as `SchoolSiteTest.sln` and
-  `SchoolSiteScript.dll`.
-- Replace `AUTOTEST_*` environment variable names with tool-owned names.
-- Review all command help and examples for internal names.
+- Confirm the public command contract for `--solution`, `--test-dll`, and
+  `--test`.
+- Review all command help and examples for product- or company-specific names.
 - Add license after ownership approval.
+
+Completed in this extraction workspace:
+
+- Removed product-specific default solution and test DLL values.
+- Replaced internal live-debug environment variable names with tool-owned
+  `VSDTECLI_*` names.
+- Removed dependency on an internal compatibility wrapper from preflight.
