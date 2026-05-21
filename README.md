@@ -1,16 +1,28 @@
 # vs-dte-cli
 
-Visual Studio DTE automation CLI for .NET Framework MSTest debugging.
+`vs-dte-cli` is a small Windows command-line tool for controlling Visual Studio
+through DTE while debugging .NET Framework MSTest runs.
 
-`vsdte-cli` can open or reuse Visual Studio, attach to a started
-`vstest.console.exe` process, stop at a source breakpoint, capture the current
-scene, step, continue, set next statement, and manage temporary breakpoints.
+It can start `vstest.console.exe`, open or reuse Visual Studio, attach the
+debugger, stop at a requested source breakpoint, capture the current scene,
+step, continue, set the next statement, and add or remove breakpoints.
 
-## Status
+## Requirements
 
-This repository is a public-extraction workspace. The code builds and the
-internal product-specific defaults have been removed, but a license and final
-public examples still need owner approval before publishing.
+- Windows
+- Visual Studio with DTE automation support
+- .NET Framework 4.8 developer tooling
+- MSTest / `vstest.console.exe`
+
+The default paths target Visual Studio 2026 Enterprise:
+
+```text
+VisualStudio.DTE.18.0
+C:\Program Files\Microsoft Visual Studio\18\Enterprise\
+```
+
+Use `--dte-prog-id`, `--devenv`, and `--vstest` when your installation uses a
+different version or edition.
 
 ## Build
 
@@ -20,9 +32,15 @@ public examples still need owner approval before publishing.
   /t:Build /p:Configuration=Debug /verbosity:minimal
 ```
 
-## Basic Usage
+The debug build creates:
 
-Run from the root of the MSTest project or pass `--root`.
+```text
+src\VsDteCli\bin\Debug\vsdte-cli.exe
+```
+
+## Quick Start
+
+Run from the root of the MSTest project, or pass `--root`.
 
 ```powershell
 .\src\VsDteCli\bin\Debug\vsdte-cli.exe preflight `
@@ -30,7 +48,7 @@ Run from the root of the MSTest project or pass `--root`.
   --test-dll .\SampleTests\bin\Debug\SampleTests.dll
 ```
 
-Start a debug run:
+Start a debug run and pause at a source line:
 
 ```powershell
 .\src\VsDteCli\bin\Debug\vsdte-cli.exe start `
@@ -43,7 +61,35 @@ Start a debug run:
 ```
 
 If `--solution` is omitted, the CLI uses the only `.sln` file directly under
-`--root` / the current directory. `--test-dll` is required for `start`.
+`--root` or the current directory. `--test-dll` is required for `start`.
+
+## Commands
+
+```text
+preflight
+list-instances
+scene
+start
+step-over | step-into | step-out
+continue
+break-all
+stop
+set-next
+breakpoint-list
+breakpoint-add
+breakpoint-remove
+cleanup
+```
+
+Run `vsdte-cli help` for the current option list.
+
+## Visual Studio Reuse
+
+`start` reuses an existing Visual Studio instance when the same solution is
+already open. This avoids creating multiple Visual Studio windows during
+iterative debugging.
+
+Use `--new-vs true` when a fresh Visual Studio process is required.
 
 ## Live Debug Hook
 
@@ -56,5 +102,9 @@ for test code that wants a first-break hook:
 - `VSDTECLI_ATTACH_WAIT_MS`
 - `VSDTECLI_FIRST_BREAK_MODE`
 
-The CLI does not require a hook, but a hook can make early attach more reliable
-for tests that run past the requested breakpoint too quickly.
+The CLI does not require a hook. A hook is useful when a test can run past the
+requested breakpoint before Visual Studio has enough time to attach.
+
+## License
+
+MIT

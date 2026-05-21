@@ -6,12 +6,11 @@ Initial scope:
 - Exclude internal artifacts, screenshots, business cases, and test data.
 - Start from the current working-tree version of `tools/vs-dte-cli`.
 
-Before publishing:
+Before a wider release:
 
 - Confirm the public command contract for `--solution`, `--test-dll`, and
   `--test`.
 - Review all command help and examples for product- or company-specific names.
-- Add license after ownership approval.
 
 Completed in this extraction workspace:
 
@@ -19,3 +18,4 @@ Completed in this extraction workspace:
 - Replaced internal live-debug environment variable names with tool-owned
   `VSDTECLI_*` names.
 - Removed dependency on an internal compatibility wrapper from preflight.
+- Added MIT license.
