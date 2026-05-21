@@ -93,6 +93,28 @@ iterative debugging.
 
 Use `--new-vs true` when a fresh Visual Studio process is required.
 
+## AI-Friendly Debugging
+
+`vs-dte-cli` is designed to work well with AI coding agents and automation
+tools.
+
+It exposes Visual Studio debugging state through deterministic CLI commands and
+JSON output, so an agent can inspect a paused MSTest run without relying on
+screen reading or manual Visual Studio interaction.
+
+Useful capabilities include:
+
+- capture the current file, line, stack frame, locals, arguments, watches, and
+  source context
+- step, continue, break, stop, and set next statement from CLI
+- add, list, and remove breakpoints dynamically
+- reuse an existing Visual Studio instance instead of opening many windows
+- clean up only the target test process when starting a focused debug run
+
+This makes debugging more evidence-based: an AI assistant can inspect the real
+runtime state, compare it with the expected behavior, and suggest the next
+debugging action without guessing from screenshots or prose descriptions.
+
 ## Live Debug Hook
 
 When `start` launches `vstest.console.exe`, it sets these environment variables

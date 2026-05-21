@@ -92,6 +92,25 @@ Visual Studio 实例，避免迭代调试时反复打开多个 Visual Studio 窗
 
 如果确实需要启动新的 Visual Studio 进程，可以使用 `--new-vs true`。
 
+## 适合 AI Agent 的调试接口
+
+`vs-dte-cli` 适合和 AI 编码助手、自动化 Agent 配合使用。
+
+它把 Visual Studio 中的调试现场转换成稳定的 CLI 命令和 JSON 输出，让
+Agent 可以读取暂停中的 MSTest 运行状态，而不需要依赖截图识别或人工描述
+Visual Studio 当前画面。
+
+常用能力包括：
+
+- 采集当前文件、行号、栈帧、局部变量、参数、watch 表达式和源码上下文
+- 通过 CLI 执行单步、继续、暂停、停止和设置下一条语句
+- 动态添加、列出和移除断点
+- 复用已有 Visual Studio 实例，避免反复打开多个窗口
+- 启动新的聚焦调试时，只清理目标测试进程
+
+这样 AI 助手可以基于真实运行时证据分析问题，把实际状态和预期行为进行
+对比，再建议下一步调试动作，而不是根据截图或文字描述猜测。
+
 ## Live Debug Hook
 
 `start` 启动 `vstest.console.exe` 时，会为测试进程设置以下环境变量，供测试
